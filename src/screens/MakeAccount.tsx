@@ -249,6 +249,9 @@ export const MakeAccount = () => {
                     onKeyDown={(e) => {
                       if (e.key === " ") {
                         e.preventDefault()
+                      } else if (e.key === "Enter") {
+                        e.preventDefault()
+                        handleCreateAccountClick()
                       }
                     }}
                     onChange={(e) =>
@@ -275,6 +278,9 @@ export const MakeAccount = () => {
                     onKeyDown={(e) => {
                       if (e.key === " ") {
                         e.preventDefault()
+                      } else if (e.key === "Enter") {
+                        e.preventDefault()
+                        handleCreateAccountClick()
                       }
                     }}
                     onChange={(e) =>
@@ -301,6 +307,9 @@ export const MakeAccount = () => {
                     onKeyDown={(e) => {
                       if (e.key === " ") {
                         e.preventDefault()
+                      } else if (e.key === "Enter") {
+                        e.preventDefault()
+                        handleCreateAccountClick()
                       }
                     }}
                     onChange={(e) =>
@@ -323,6 +332,9 @@ export const MakeAccount = () => {
                     onKeyDown={(e) => {
                       if (e.key === " ") {
                         e.preventDefault()
+                      } else if (e.key === "Enter") {
+                        e.preventDefault()
+                        handleCreateAccountClick()
                       }
                     }}
                     onChange={(e) =>
@@ -347,6 +359,9 @@ export const MakeAccount = () => {
                     onKeyDown={(e) => {
                       if (e.key === " ") {
                         e.preventDefault()
+                      } else if (e.key === "Enter") {
+                        e.preventDefault()
+                        handleCreateAccountClick()
                       }
                     }}
                     onChange={(e) =>
