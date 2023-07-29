@@ -18,9 +18,12 @@
 
 // const User = mongoose.model("User", userSchema)
 
+import { Task } from "./index"
+
 export type User = {
   USERNAME: string
   PASSWORD: string
   EMAIL: string
   DISPLAY_NAME: string
+  TASKS: Task[]
 }

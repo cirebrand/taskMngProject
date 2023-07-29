@@ -134,6 +134,7 @@ export const MakeAccount = () => {
         PASSWORD: password!,
         EMAIL: email!,
         DISPLAY_NAME: displayName!,
+        TASKS: [],
       }
       //Creates account on mongdoDB
       const response = await axios.post("http://localhost:4000/signup", body)
