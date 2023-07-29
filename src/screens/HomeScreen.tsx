@@ -1,90 +1,214 @@
-import React, { useState } from "react"
-import { useLocation } from "react-router-dom"
+import React, { useState, useEffect } from "react"
 import {} from "../static/images/MainScreenImages"
 import { fishBackground } from "../static/images/globalImages"
 import { useAuth } from "../auth-context"
+import "../styles/Global.css"
+import {
+  NavBar,
+  CreateTask,
+  CreateTag,
+  TaskCalendar,
+  SortTasks,
+  Grid,
+  EditTask,
+} from "../components/HomeScreenComponents/index"
+import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { start } from "repl"
+import { Task } from "../server/models/index"
 
 export const HomeScreen = () => {
   const auth = useAuth()
   const navigate = useNavigate()
 
-  //THIS SHOULD BE THE DISPLAYNAME.
-  //Use this to getOne -> displayname from the database
+  //Account information, from auth
   const displayName = auth.account?.DISPLAY_NAME
+  const username = auth.account?.USERNAME
 
-  // HOW TO GET ACCOUNT INFORMATION, for populating and stuff
-  //console.log(auth.account)
+  /*
+    - Can set these anytime
+    - tasks are not initialized but added when needed -> (taskThunks)
+  */
+  //Lists from User
+  const [allReminders, setAllReminders] = useState<string[]>([]) //All tasks
+  const [allComments, setAllComments] = useState<string[]>([]) //1 task
 
-  const homeScreenStyle = {
-    backgroundImage: `url(${fishBackground})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    height: "100vh",
-    overflow: "hidden",
-    margin: 0,
-    padding: 0,
+  //Lists
+  const [tasks, setTasks] = useState<Partial<Task>[]>()
+  const [tags, setTags] = useState<string[]>([])
+  const [sortedTasks, setSortedTasks] = useState<Partial<Task>[]>([]) //From sortTasks component
+
+  //PopUp States
+  const [createTask, setCreateTask] = useState(false)
+  const [createTag, setCreateTag] = useState(false)
+  const [editTask, setEditTask] = useState(false)
+
+  //Grid -> Edit Task
+  const [selectedTask, setSelectedTask] = useState<Partial<Task>>()
+
+  const loadTags = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/home/getTags", {
+        params: {
+          username: username,
+        },
+      })
+      const tags = response.data
+
+      setTags(tags.tags)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
-  const [importance, setImportance] = useState<number | undefined>(undefined)
+  const loadTasks = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/home/getTasks", {
+        params: {
+          username: username,
+        },
+      })
+      const tasks = response.data
+
+      setTasks(tasks.tasks)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const handleCreateTaskClick = (value: boolean) => {
+    setCreateTask(value)
+  }
+  const handleCreateTagClick = (value: boolean) => {
+    setCreateTag(value)
+  }
+  const handleEditTaskClick = (value: boolean) => {
+    setEditTask(value)
+  }
+
+  // Callback function to receive sortedTasks
+  const handleSortTasksChange = (sortedTasks: Partial<Task>[]) => {
+    setSelectedTask(selectedTask)
+    setSortedTasks(sortedTasks)
+  }
+
+  const handleTaskSelect = (task: Partial<Task>) => {
+    setSelectedTask(task)
+    setEditTask(true) //Edit selected task
+  }
+
+  //Get lists
+  useEffect(() => {
+    loadTasks()
+    loadTags()
+  }, [])
 
   return (
-    <div style={homeScreenStyle}>
-      <h1>Welcome to the Main Page, {displayName}</h1>
-      <p>This is the main page content.</p>
-      <div style={{ width: "25%" }}>
-        <div style={{ marginRight: "5px" }}>Start Date</div>
-        <input
-          type="text"
-          className="getInputStyle"
-          placeholder="START DATE"
-          value={startDate}
-          onFocus={(e) => (e.target.placeholder = "")}
-          onBlur={(e) => (e.target.placeholder = "START DATE")}
-          onChange={(e) => setStartDate(e.target.value)}
+    <>
+      {createTask && (
+        <CreateTask
+          onButtonClick={(changed: boolean) => {
+            handleCreateTaskClick(false)
+            if (changed) {
+              loadTasks() //Load tasks
+            }
+            loadTags() //Load Tags
+          }}
         />
-      </div>
-      <div style={{ width: "25%" }}>
-        <div style={{ marginRight: "5px" }}>End Date</div>
-        <input
-          type="text"
-          className="getInputStyle"
-          placeholder="END DATE"
-          value={endDate}
-          onFocus={(e) => (e.target.placeholder = "")}
-          onBlur={(e) => (e.target.placeholder = "END DATE")}
-          onChange={(e) => setEndDate(e.target.value)}
+      )}
+      {createTag && (
+        <CreateTag
+          onButtonClick={() => {
+            handleCreateTagClick(false)
+            loadTags() //Load Tags
+          }}
         />
-      </div>
-      <div>
-        <label htmlFor="importance-select">Select Importance:</label>
-        <select
-          id="importance-select"
-          value={importance || ""}
-          onChange={(event) => setImportance(parseInt(event.target.value))}
+      )}
+      {editTask && (
+        <EditTask
+          gridTask={selectedTask!}
+          tasks={sortedTasks!}
+          onButtonClick={(changed: boolean) => {
+            setSelectedTask(undefined) //Better solutions...
+            handleEditTaskClick(false)
+            if (changed) {
+              loadTasks() //Load tasks
+            }
+            loadTags() //Load Tags
+          }}
+        />
+      )}
+      <div style={{ backgroundColor: "#C6C9DA", height: "100vh" }}>
+        <NavBar />
+        <div
+          style={{
+            margin: "20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
         >
-          <option value="">Select an option</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-        </select>
+          {/* <h1>Welcome back, {displayName}</h1> */}
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                backgroundColor: "#8592C9",
+                width: "fit-content",
+                borderRadius: "15px",
+                alignItems: "center",
+                padding: "5px",
+              }}
+            >
+              <h1 style={{ margin: "0px" }}>Create/Edit.</h1>
+              <button
+                onClick={() => {
+                  setCreateTask(true)
+                }}
+                style={{ width: "150px", fontSize: "20px" }}
+                className="roundButton"
+              >
+                Create Task
+              </button>
+              <button
+                onClick={() => {
+                  setCreateTag(true)
+                }}
+                style={{ width: "150px", fontSize: "20px" }}
+                className="roundButton"
+              >
+                Create Tag
+              </button>
+              <button
+                onClick={() => {
+                  setEditTask(true)
+                }}
+                style={{ width: "150px", fontSize: "20px" }}
+                className="roundButton"
+              >
+                Edit Task
+              </button>
+            </div>
+
+            <SortTasks
+              tasks={tasks ? tasks : []}
+              tags={tags}
+              onSortTasksChange={handleSortTasksChange}
+            />
+          </div>
+
+          <div
+            style={{
+              backgroundColor: "#8592C9",
+              borderTopLeftRadius: "20px",
+              borderTopRightRadius: "20px",
+            }}
+          >
+            <Grid tasks={sortedTasks} onTaskSelect={handleTaskSelect} />
+          </div>
+        </div>
       </div>
-      <button
-        onClick={() => {
-          const body = {
-            START_DATE: startDate,
-            END_DATE: endDate,
-            IMPORTANCE: importance,
-          }
-          console.log(body)
-        }}
-      >
-        test
-      </button>
-    </div>
+    </>
   )
 }

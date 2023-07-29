@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react"
-import { User } from "./server/models/userModel"
+import { User } from "./server/models/index"
 
 interface AuthContextInterface {
   isLoggedIn: boolean // true if the user is logged in, false otherwise

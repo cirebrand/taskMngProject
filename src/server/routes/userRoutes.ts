@@ -4,7 +4,7 @@ import {
   findAccount,
   findUsername,
   findEmail,
-} from "../thunks/userThunks"
+} from "../thunks/index"
 import { Router, Request, Response } from "express"
 
 const router = Router()
@@ -12,8 +12,8 @@ const router = Router()
 router.post("/signup", async (req: Request, res: Response) => {
   try {
     const user = req.body // Object with info
-
     await createUser(user)
+
     res.status(200).json({ message: "User created successfully" })
   } catch (e) {
     console.error(e)

@@ -5,7 +5,7 @@ import "../styles/Global.css"
 import "../styles/LoginScreen.css"
 import { VolleyBall, mountainBackground } from "../static/images/globalImages"
 import axios from "axios"
-import { User } from "../server/models/userModel"
+import { User } from "../server/models/index"
 import { useAuth } from "../auth-context"
 
 export const LoginScreen = () => {
@@ -145,7 +145,7 @@ export const LoginScreen = () => {
               >
                 <button
                   style={{ fontSize: "20px", margin: "10px" }}
-                  className="greenButton"
+                  className="roundButton"
                   onClick={() => {
                     handleLogin()
                   }}

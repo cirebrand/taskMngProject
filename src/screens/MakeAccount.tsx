@@ -6,7 +6,7 @@ import "../styles/MakeAccount.css"
 import { mountainBackground } from "../static/images/globalImages"
 import { PopUpMsg } from "../components/index"
 import isEmail from "validator/lib/isEmail"
-import { User } from "../server/models/userModel"
+import { User } from "../server/models/index"
 import axios from "axios"
 import { useAuth } from "../auth-context"
 
@@ -383,7 +383,7 @@ export const MakeAccount = () => {
                   onClick={async () => {
                     handleCreateAccountClick()
                   }}
-                  className="greenButton"
+                  className="roundButton"
                 >
                   Create Account
                 </button>

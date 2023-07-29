@@ -21,7 +21,7 @@ const PopUpMsg: FC<Props> = ({ message, onButtonClick }) => (
       </div>
       <button
         onClick={onButtonClick}
-        className="greenButton"
+        className="roundButton"
         style={{
           fontSize: "20px",
           display: "flex",

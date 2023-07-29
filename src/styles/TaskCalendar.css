@@ -1,0 +1,7 @@
+/* TaskCalendar.css */
+
+/* Add your custom styles for the highlighted days here */
+.highlighted-day {
+  background-color: #ffc0cb; /* Pink color, you can change this to any other color you prefer */
+  /* Add any other styles you want to apply to the highlighted days */
+}

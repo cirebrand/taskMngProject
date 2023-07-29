@@ -131,7 +131,7 @@ export const ForgotPassword = () => {
                   onClick={() => {
                     /*This should open change pass model*/
                   }}
-                  className="greenButton"
+                  className="roundButton"
                 >
                   Continue
                 </button>
